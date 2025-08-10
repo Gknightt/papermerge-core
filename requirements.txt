@@ -1,0 +1,4 @@
+papermerge
+gunicorn
+psycopg2-binary
+redis
