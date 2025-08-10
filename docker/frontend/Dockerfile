@@ -1,21 +1,22 @@
 FROM node:20.19 AS frontend_build
-# ensure all packages are up-to-date
-RUN apt update && apt upgrade -y && rm -rf /var/cache/apk/*
+
+# Install build deps for native packages
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /build_frontend_app
+
+# Copy only package.json and yarn.lock first for caching
+COPY frontend/package.json frontend/yarn.lock ./
+
+# Enable correct Yarn version
+RUN corepack enable && corepack prepare yarn@stable --activate
+
+# Install dependencies
+RUN yarn install --frozen-lockfile --network-timeout 100000
+
+# Copy the rest of the source
 COPY frontend/ .
-RUN yarn install
+
+# Build workspaces
 RUN yarn workspace @papermerge/hooks build
 RUN yarn workspace ui build
-
-FROM nginx:alpine
-
-# Copy production build to nginx folder
-COPY --from=frontend_build /build_frontend_app/apps/ui/dist /usr/share/nginx/html
-
-# Replace default nginx config
-COPY docker/frontend/nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
