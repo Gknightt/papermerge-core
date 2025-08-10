@@ -1,32 +1,14 @@
 services:
   - type: web
-    name: papermerge-web
-    env: docker
-    plan: starter
-    dockerfilePath: ./Dockerfile
+    name: papermerge-core
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn papermerge.core.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: DJANGO_SETTINGS_MODULE
-        value: config.settings.production
-      - key: DJANGO_SECRET_KEY
-        generateValue: true
-      - key: DATABASE_URL
-        fromDatabase:
-          name: papermerge-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: papermerge-redis
-          type: redis
-      - key: ALLOWED_HOSTS
-        value: "*"
-
-databases:
-  - name: papermerge-db
-    plan: starter
-    databaseName: papermerge
-    user: papermerge
-
-services:
-  - type: redis
-    name: papermerge-redis
-    plan: starter
+      - key: PAPERMERGE__SECURITY__SECRET_KEY
+        value: your_secret_key
+      - key: PAPERMERGE__DATABASE__URL
+        value: sqlite:///./papermerge.db
+      - key: PAPERMERGE__MAIN__MEDIA_ROOT
+        value: ./media
