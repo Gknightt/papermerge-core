@@ -19,7 +19,6 @@ services:
           type: redis
       - key: ALLOWED_HOSTS
         value: "*"
-    healthCheckPath: /
 
 databases:
   - name: papermerge-db
