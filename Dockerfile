@@ -27,7 +27,7 @@ COPY . /app
 # Install dependencies including current project (no --no-root)
 RUN poetry install -E pg
 
-# Copy entrypoint script
+# Copy entrypoint script and make it executable
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
@@ -35,4 +35,4 @@ RUN chmod +x /app/entrypoint.sh
 EXPOSE 8000
 
 # Use entrypoint script to migrate and start server
-CMD ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
