@@ -27,9 +27,12 @@ COPY . /app
 # Install dependencies including current project (no --no-root)
 RUN poetry install -E pg
 
+# Copy entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port 8000
 EXPOSE 8000
 
-# Run the Papermerge backend server using poetry task runner
-CMD ["poetry", "run", "task", "server"]
+# Use entrypoint script to migrate and start server
+CMD ["/app/entrypoint.sh"]
