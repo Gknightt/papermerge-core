@@ -6,5 +6,5 @@ poetry run task migrate
 
 echo "Starting Papermerge server..."
 
-poetry run task server --host 0.0.0.0 --port ${PORT:-8000}
+poetry run uvicorn papermerge:app --host 0.0.0.0 --port ${PORT:-8000}
 
