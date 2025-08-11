@@ -27,10 +27,6 @@ COPY . /app
 # Install dependencies including current project (no --no-root)
 RUN poetry install -E pg
 
-# Set environment variables required for Papermerge (use Railway env vars)
-ENV PAPERMERGE__DATABASE__URL=$PAPERMERGE__DATABASE__URL
-ENV PAPERMERGE__MAIN__MEDIA_ROOT=$PAPERMERGE__MAIN__MEDIA_ROOT
-ENV PAPERMERGE__MAIN__API_PREFIX=$PAPERMERGE__MAIN__API_PREFIX
 
 # Expose port 8000
 EXPOSE 8000
