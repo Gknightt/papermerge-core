@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Start Uvicorn for ASGI
-CMD uvicorn papermerge.core.asgi:application --host 0.0.0.0 --port 8000
+CMD uvicorn docker.__cloud__obsolete.config.asgi:application --host 0.0.0.0 --port 8000
