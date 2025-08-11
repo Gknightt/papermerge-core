@@ -18,14 +18,14 @@ ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Copy poetry files
+# Copy poetry files first
 COPY poetry.lock pyproject.toml /app/
 
-# Install dependencies with PostgreSQL extras
-RUN poetry install --no-root -E pg
-
-# Copy app source
+# Copy app source before installing dependencies
 COPY . /app
+
+# Install dependencies including current project (no --no-root)
+RUN poetry install -E pg
 
 # Set environment variables required for Papermerge (use Railway env vars)
 ENV PAPERMERGE__DATABASE__URL=$PAPERMERGE__DATABASE__URL
