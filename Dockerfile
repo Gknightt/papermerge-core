@@ -1,7 +1,6 @@
 FROM python:3.10-slim
 
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=config.settings.production
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,24 +8,32 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libmagic1 \
     poppler-utils \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
-# Copy requirements and install Python packages
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy poetry files
+COPY poetry.lock pyproject.toml /app/
 
-# Copy project files
-COPY . .
+# Install dependencies with PostgreSQL extras
+RUN poetry install --no-root -E pg
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Copy app source
+COPY . /app
 
-# Run migrations
-RUN python manage.py migrate
+# Set environment variables required for Papermerge (use Railway env vars)
+ENV PAPERMERGE__DATABASE__URL=$PAPERMERGE__DATABASE__URL
+ENV PAPERMERGE__MAIN__MEDIA_ROOT=$PAPERMERGE__MAIN__MEDIA_ROOT
+ENV PAPERMERGE__MAIN__API_PREFIX=$PAPERMERGE__MAIN__API_PREFIX
 
-# Expose the port
+# Expose port 8000
 EXPOSE 8000
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Run the Papermerge backend server using poetry task runner
+CMD ["poetry", "run", "task", "server"]
