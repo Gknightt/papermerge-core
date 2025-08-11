@@ -6,4 +6,5 @@ poetry run task migrate
 
 echo "Starting Papermerge server..."
 
-poetry run uvicorn docker.__cloud__obsolete.config.asgi:application --host 0.0.0.0 --port ${PORT:-8000}
+poetry run task server --host 0.0.0.0 --port ${PORT:-8000}
+
