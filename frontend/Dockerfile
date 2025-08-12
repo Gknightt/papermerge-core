@@ -1,13 +1,11 @@
+# Inside frontend/Dockerfile
 FROM node:18
 
-WORKDIR /app/frontend
+WORKDIR /app
 
-# Copy package.json and yarn.lock from frontend folder
-COPY frontend/package.json frontend/yarn.lock ./
-
-# Copy the apps and packages folders
-COPY frontend/apps ./apps
-COPY frontend/packages ./packages
+COPY package.json yarn.lock ./
+COPY apps ./apps
+COPY packages ./packages
 
 RUN yarn install
 
