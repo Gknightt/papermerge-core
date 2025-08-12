@@ -28,13 +28,5 @@ COPY --from=build /app/apps/ui/dist ./dist
 # Railway exposes PORT env var
 ENV PORT=8080
 
-# Copy your start.sh script into the container
-COPY start.sh .
-
-# Make the script executable
-RUN chmod +x start.sh
-
-# Use the script as the container start command
-CMD ["./start.sh"]
-
-
+# Serve the static files directly
+CMD ["sh", "-c", "serve -s ./dist -l $PORT -L"]
