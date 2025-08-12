@@ -1,6 +1,11 @@
 {
   "files": [],
-  "references": [{"path": "packages/hooks"}, {"path": "packages/viewer"}],
+  "references": [
+    { "path": "packages/hooks" },
+    { "path": "packages/viewer" },
+    { "path": "packages/kommon" },
+    { "path": "apps/ui" }
+  ],
   "compilerOptions": {
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
@@ -23,6 +28,8 @@
     "paths": {
       "@papermerge/hooks": ["packages/hooks/src"],
       "@papermerge/viewer": ["packages/viewer/src"],
+      "@papermerge/kommon": ["packages/kommon/src"],
+      "@papermerge/kommon/*": ["packages/kommon/src/*"],
       "@/*": ["apps/ui/src/*"]
     }
   }
