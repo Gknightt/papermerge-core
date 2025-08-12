@@ -1,5 +1,6 @@
 {
   "name": "papermerge-dms-ui",
+  "private": true,
   "packageManager": "yarn@4.9.2",
   "workspaces": [
     "packages/*",
