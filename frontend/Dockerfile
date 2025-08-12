@@ -1,28 +1,23 @@
-# --- Build stage ---
-FROM node:20 AS build
+# Use node image
+FROM node:18
 
-WORKDIR /app
-COPY . .
+# Set working directory inside container to frontend monorepo root
+WORKDIR /app/frontend
 
-# Install dependencies
+# Copy package.json, yarn.lock, and all workspace folders needed
+COPY frontend/package.json frontend/yarn.lock ./ 
+COPY frontend/apps ./apps
+COPY frontend/packages ./packages
+
+# Install dependencies (including all workspaces)
 RUN yarn install
 
-# Build only the UI workspace
+# Build the UI workspace (replace 'ui' with your actual workspace name if different)
 RUN yarn workspace ui build
 
-# --- Serve stage ---
-FROM node:20-alpine
+# Expose port if needed (only if you serve static files with a server)
+EXPOSE 3000
 
-# Install a lightweight static file server
-RUN npm install -g serve
-
-WORKDIR /app
-
-# Copy the build output
-COPY --from=build /app/apps/ui/dist ./dist
-
-# Railway exposes PORT env var
-ENV PORT=8080
-
-# Command to serve the built frontend
-CMD ["serve", "-s", "dist", "-l", "$PORT"]
+# CMD to serve your built UI - for example using serve or any static server
+RUN yarn global add serve
+CMD ["serve", "-s", "apps/ui/dist", "-l", "3000"]
