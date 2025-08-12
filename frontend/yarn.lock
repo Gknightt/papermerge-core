@@ -1653,18 +1653,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"Papermerge DMS UI@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "Papermerge DMS UI@workspace:."
-  dependencies:
-    "@typescript-eslint/eslint-plugin": "npm:^8.38.0"
-    "@typescript-eslint/parser": "npm:^8.38.0"
-    eslint: "npm:^9.32.0"
-    eslint-plugin-unused-imports: "npm:^4.1.4"
-    prettier: "npm:^3.6.2"
-  languageName: unknown
-  linkType: soft
-
 "abbrev@npm:^3.0.0":
   version: 3.0.1
   resolution: "abbrev@npm:3.0.1"
@@ -3569,6 +3557,18 @@ __metadata:
   checksum: 10c0/62ba2785eb655fec084a257af34dbe24292ab74516d6aecef97ef72d4897310bc6898f6c85b5cd22770eaa1ce60d55a0230e150fb6a966e3ecd6c511e23d164b
   languageName: node
   linkType: hard
+
+"papermerge-dms-ui@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "papermerge-dms-ui@workspace:."
+  dependencies:
+    "@typescript-eslint/eslint-plugin": "npm:^8.38.0"
+    "@typescript-eslint/parser": "npm:^8.38.0"
+    eslint: "npm:^9.32.0"
+    eslint-plugin-unused-imports: "npm:^4.1.4"
+    prettier: "npm:^3.6.2"
+  languageName: unknown
+  linkType: soft
 
 "parent-module@npm:^1.0.0":
   version: 1.0.1
