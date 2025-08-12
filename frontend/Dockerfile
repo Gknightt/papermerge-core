@@ -28,7 +28,13 @@ COPY --from=build /app/apps/ui/dist ./dist
 # Railway exposes PORT env var
 ENV PORT=8080
 
-# Command to serve the built frontend
-CMD sh -c 'serve -s dist -l 0.0.0.0:${PORT:-3000}'
+# Copy your start.sh script into the container
+COPY start.sh .
+
+# Make the script executable
+RUN chmod +x start.sh
+
+# Use the script as the container start command
+CMD ["./start.sh"]
 
 
