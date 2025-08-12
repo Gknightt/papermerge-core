@@ -3,6 +3,7 @@ FROM node:18
 
 WORKDIR /app
 
+RUN corepack enable
 COPY package.json yarn.lock ./
 COPY apps ./apps
 COPY packages ./packages
