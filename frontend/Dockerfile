@@ -28,5 +28,5 @@ COPY --from=build /app/apps/ui/dist ./dist
 # Railway exposes PORT env var
 ENV PORT=8080
 
-# Serve the static files directly
-CMD ["sh", "-c", "serve -s ./dist -l $PORT -L"]
+# Serve on 0.0.0.0 to accept external connections
+CMD ["sh", "-c", "serve -s ./dist -l $PORT"]
