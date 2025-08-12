@@ -2,6 +2,10 @@
 FROM node:20 AS build
 
 WORKDIR /app
+
+# Enable Corepack to support Yarn 4+ per your packageManager config
+RUN corepack enable
+
 COPY . .
 
 # Install dependencies
