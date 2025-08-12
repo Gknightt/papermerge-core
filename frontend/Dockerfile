@@ -29,5 +29,6 @@ COPY --from=build /app/apps/ui/dist ./dist
 ENV PORT=8080
 
 # Command to serve the built frontend
-CMD ["serve", "-s", "dist", "-l", "0.0.0.0:$PORT"]
+CMD sh -c 'serve -s dist -l 0.0.0.0:${PORT:-3000}'
+
 
