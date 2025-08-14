@@ -31,10 +31,12 @@ function App() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    console.log("App.tsx useEffect - status:", status, "user:", user, "location.pathname:", location.pathname)
     /* notice *EXACT match* of the root route.
       Without it, user will always be redirected to home folder,
       even when he/she opens a document via direct url pasting in browser */
     if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/") {
+      console.log("Navigating from root to:", `/home/${user.home_folder_id}`)
       /*
       (1)
       This code addresses following problem: what happens when user lands
@@ -45,10 +47,12 @@ function App() {
       navigate(`/home/${user.home_folder_id}`)
     }
     if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/home") {
+      console.log("Navigating from /home to:", `/home/${user.home_folder_id}`)
       // see (1)
       navigate(`/home/${user.home_folder_id}`)
     }
     if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/home/") {
+      console.log("Navigating from /home/ to:", `/home/${user.home_folder_id}`)
       // see (2)
       navigate(`/home/${user.home_folder_id}`)
     }
@@ -65,7 +69,15 @@ function App() {
   }, [width, height])
 
   if (status == "failed") {
-    return <>{error}</>
+    return <div>Error loading user: {error}</div>
+  }
+
+  if (status == "loading") {
+    return <div>Loading...</div>
+  }
+
+  if (!user) {
+    return <div>No user data available</div>
   }
 
   return (

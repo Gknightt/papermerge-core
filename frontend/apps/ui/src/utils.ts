@@ -135,18 +135,25 @@ export function getDefaultHeaders(): Record<string, string> {
 
 async function getCurrentUser(): Promise<User> {
   return new Promise((resolve, reject) => {
-    const max_try = 5
+    const max_try = 10  // Increased from 5 to 10
     let count = 0
 
     function get_user() {
       const user: SliceState<User> = store.getState().currentUser
-      if (user.status == "succeeded") {
+      console.log(`getCurrentUser attempt ${count + 1}: status=${user.status}, data=`, user.data)
+      
+      if (user.status == "succeeded" && user.data) {
+        console.log("getCurrentUser: User loaded successfully", user.data)
         resolve(user.data!)
       } else if (user.status == "failed") {
-        reject("Failed to load user")
+        console.error("getCurrentUser: Failed to load user", user.error)
+        reject(new Error(`Failed to load user: ${user.error}`))
       } else if (count < max_try) {
         count += 1
         setTimeout(get_user, 1000)
+      } else {
+        console.error("getCurrentUser: Timeout after", max_try, "attempts")
+        reject(new Error(`Timeout: Unable to load user after ${max_try} attempts`))
       }
     }
     // initial call
