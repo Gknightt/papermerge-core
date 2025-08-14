@@ -11,8 +11,14 @@ const initialState: SliceState<User> = {
 export const fetchCurrentUser = createAsyncThunk(
   "user/fetchCurrentUser",
   async () => {
+    console.log("fetchCurrentUser: Making API call to /api/users/me")
     const response = await axios.get("/api/users/me")
+    console.log("fetchCurrentUser: Response received:", response)
+    console.log("fetchCurrentUser: Response data:", response.data)
+    console.log("fetchCurrentUser: Response data type:", typeof response.data)
+    
     const userDetails = response.data as UserDetails
+    console.log("fetchCurrentUser: Parsed userDetails:", userDetails)
     return userDetails
   }
 )
