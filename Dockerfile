@@ -1,38 +1,22 @@
-FROM python:3.13-slim
+FROM node:20.19 AS frontend_build
 
-ENV PYTHONUNBUFFERED=1
+# Install build deps for native packages
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    libmagic1 \
-    poppler-utils \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /build_frontend_app
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
+# Copy only package.json and yarn.lock first for caching
+COPY frontend/package.json frontend/yarn.lock ./
 
-ENV PATH="/root/.local/bin:$PATH"
+# Enable correct Yarn version
+RUN corepack enable && corepack prepare yarn@stable --activate
 
-WORKDIR /app
+# Install dependencies
+RUN yarn install --frozen-lockfile --network-timeout 100000
 
-# Copy poetry files first
-COPY poetry.lock pyproject.toml /app/
+# Copy the rest of the source
+COPY frontend/ .
 
-# Copy app source before installing dependencies
-COPY . /app
-
-# Install dependencies including current project (no --no-root)
-RUN poetry install -E pg
-
-# Copy entrypoint script and make it executable
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-# Expose port 8000
-EXPOSE 8000
-
-# Use entrypoint script to migrate and start server
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Build workspaces
+RUN yarn workspace @papermerge/hooks build
+RUN yarn workspace ui build
