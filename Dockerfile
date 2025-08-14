@@ -18,5 +18,5 @@ RUN yarn install --mode=update-lockfile --network-timeout 100000
 COPY frontend/ .
 
 # Build workspaces
-RUN yarn workspace @papermerge/hooks build
+RUN yarn workspace hooks build
 RUN yarn workspace ui build
