@@ -1,32 +1,22 @@
-# --- Build stage ---
-FROM node:20 AS build
+FROM node:20.19 AS frontend_build
 
-WORKDIR /app
+# Install build deps for native packages
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
-# Enable Corepack to support Yarn 4+ per your packageManager config
-RUN corepack enable
+WORKDIR /build_frontend_app
 
-COPY . .
+# Copy only package.json and yarn.lock first for caching
+COPY frontend/package.json frontend/yarn.lock ./
+
+# Enable correct Yarn version
+RUN corepack enable && corepack prepare yarn@stable --activate
 
 # Install dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile --network-timeout 100000
 
-# Build only the UI workspace
+# Copy the rest of the source
+COPY frontend/ .
+
+# Build workspaces
+RUN yarn workspace @papermerge/hooks build
 RUN yarn workspace ui build
-
-# --- Serve stage ---
-FROM node:20-alpine
-
-# Install a lightweight static file server
-RUN npm install -g serve
-
-WORKDIR /app
-
-# Copy the build output
-COPY --from=build /app/apps/ui/dist ./dist
-
-# Railway exposes PORT env var
-ENV PORT=8080
-
-# Serve on 0.0.0.0 to accept external connections
-CMD ["sh", "-c", "serve -s ./dist -l $PORT"]
