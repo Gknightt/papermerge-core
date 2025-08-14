@@ -14,10 +14,10 @@ uvicorn
 papermerge
 
 
+export VITE_BASE_URL=https://papermerge-core-production.up.railway.app
 export VITE_REMOTE_USER=admin
 export VITE_REMOTE_USER_ID=49e78737-7c6e-410f-ae27-315b04bdec69
 export VITE_REMOTE_GROUPS=admin
-export VITE_BASE_URL=https://papermerge-core-production.up.railway.app
 export VITE_KEEP_UNUSED_DATA_FOR=1
 
 yarn workspace ui dev
