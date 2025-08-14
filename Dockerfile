@@ -12,7 +12,7 @@ COPY frontend/package.json frontend/yarn.lock ./
 RUN corepack enable && corepack prepare yarn@stable --activate
 
 # Install dependencies
-RUN yarn install --frozen-lockfile --network-timeout 100000
+RUN yarn install --mode=update-lockfile --network-timeout 100000
 
 # Copy the rest of the source
 COPY frontend/ .
