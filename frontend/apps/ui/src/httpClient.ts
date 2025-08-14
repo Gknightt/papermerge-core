@@ -6,11 +6,34 @@ import axios from "axios"
 const baseUrl = getBaseURL()
 const defaultHeaders = getDefaultHeaders()
 
+console.log("httpClient: Creating axios client with baseURL:", baseUrl)
+console.log("httpClient: Default headers:", defaultHeaders)
+
 const client = axios.create({
   baseURL: baseUrl
 })
 
 client.defaults.headers.common = defaultHeaders
+
+// Add response interceptor to log API responses
+client.interceptors.response.use(
+  (response) => {
+    console.log(`API Response: ${response.config.method?.toUpperCase()} ${response.config.url}`, {
+      status: response.status,
+      data: response.data,
+      headers: response.headers
+    })
+    return response
+  },
+  (error) => {
+    console.error(`API Error: ${error.config?.method?.toUpperCase()} ${error.config?.url}`, {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    })
+    return Promise.reject(error)
+  }
+)
 
 export default client
 

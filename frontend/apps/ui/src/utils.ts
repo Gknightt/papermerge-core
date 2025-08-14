@@ -9,24 +9,26 @@ import type {PanelMode, User} from "@/types"
 export function getBaseURL(trimBackslash?: boolean): string {
   const base_url = import.meta.env.VITE_BASE_URL
 
-  console.log("getBaseURL: VITE_BASE_URL =", base_url)
-
-  if (base_url) {
-    if (trimBackslash) {
-      // trim backslash if and only if there is a backlash at the end of string
-      if (base_url.length > 0 && base_url[base_url.length - 1] == "/") {
-        const result = base_url.substring(0, base_url.length - 1)
-        console.log("getBaseURL: Trimmed result =", result)
-        return result
-      }
-    }
-
-    console.log("getBaseURL: Returning =", base_url)
-    return base_url
+  // For production deployments like Railway, if no VITE_BASE_URL is set,
+  // use empty string so API calls are relative to current domain
+  if (!base_url) {
+    console.log("getBaseURL: No VITE_BASE_URL set, using relative URLs for production")
+    return ""
   }
 
-  console.log("getBaseURL: No VITE_BASE_URL, returning empty string")
-  return ""
+  console.log("getBaseURL: VITE_BASE_URL =", base_url)
+
+  if (trimBackslash) {
+    // trim backslash if and only if there is a backlash at the end of string
+    if (base_url.length > 0 && base_url[base_url.length - 1] == "/") {
+      const result = base_url.substring(0, base_url.length - 1)
+      console.log("getBaseURL: Trimmed result =", result)
+      return result
+    }
+  }
+
+  console.log("getBaseURL: Returning =", base_url)
+  return base_url
 }
 
 export function getRemoteUser(): string | null {
