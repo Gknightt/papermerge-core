@@ -34,7 +34,7 @@ function App() {
     /* notice *EXACT match* of the root route.
       Without it, user will always be redirected to home folder,
       even when he/she opens a document via direct url pasting in browser */
-    if (status == "succeeded" && user && location.pathname == "/") {
+    if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/") {
       /*
       (1)
       This code addresses following problem: what happens when user lands
@@ -44,15 +44,15 @@ function App() {
     */
       navigate(`/home/${user.home_folder_id}`)
     }
-    if (status == "succeeded" && user && location.pathname == "/home") {
+    if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/home") {
       // see (1)
       navigate(`/home/${user.home_folder_id}`)
     }
-    if (status == "succeeded" && user && location.pathname == "/home/") {
+    if (status == "succeeded" && user && user.home_folder_id && location.pathname == "/home/") {
       // see (2)
       navigate(`/home/${user.home_folder_id}`)
     }
-  }, [status])
+  }, [status, user])
 
   useEffect(() => {
     if (ref?.current) {
