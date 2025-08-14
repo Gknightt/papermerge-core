@@ -52,7 +52,7 @@ function App() {
       // see (2)
       navigate(`/home/${user.home_folder_id}`)
     }
-  }, [status])
+  }, [status, user, location.pathname, navigate])
 
   useEffect(() => {
     if (ref?.current) {
