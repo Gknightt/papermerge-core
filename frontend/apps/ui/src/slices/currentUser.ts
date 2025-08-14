@@ -17,6 +17,11 @@ export const fetchCurrentUser = createAsyncThunk(
     console.log("fetchCurrentUser: Response data:", response.data)
     console.log("fetchCurrentUser: Response data type:", typeof response.data)
     
+    // Check if we got HTML instead of JSON (deployment configuration issue)
+    if (typeof response.data === 'string' && response.data.includes('<!doctype html>')) {
+      throw new Error('API call returned HTML instead of JSON - Backend API not properly configured. Please check your deployment configuration to ensure /api/* routes are handled by the Python backend.')
+    }
+    
     const userDetails = response.data as UserDetails
     console.log("fetchCurrentUser: Parsed userDetails:", userDetails)
     return userDetails
